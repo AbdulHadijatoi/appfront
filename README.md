@@ -1,11 +1,3 @@
-# Project Name
-
-## Description
-
-This project is a scalable Laravel application for managing products, optimizing images, and handling various admin functionalities. It includes features like CRUD operations for products, file upload handling, image optimization, validation, and caching for performance improvements. The admin panel has been designed for ease of use and is structured with reusable components and optimized for future scalability.
-
----
-
 ## Changes Made
 
 ### 1. **Refactored Routes:**
@@ -85,7 +77,7 @@ This project is a scalable Laravel application for managing products, optimizing
 - Laravel 12
 - Composer
 - PHP 8.1+
-- MySQL / MariaDB
+- MySQL
 
 ### Steps
 
