@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -15,10 +18,9 @@ class ProductController extends Controller
         return view('products.list', compact('products', 'exchangeRate'));
     }
 
-    public function show(Request $request)
+    public function show(Request $request, $product_id)
     {
-        $id = $request->route('product_id');
-        $product = Product::find($id);
+        $product = Product::find($product_id);
         $exchangeRate = $this->getExchangeRate();
 
         return view('products.show', compact('product', 'exchangeRate'));
@@ -29,32 +31,19 @@ class ProductController extends Controller
      */
     private function getExchangeRate()
     {
-        try {
-            $curl = curl_init();
+        return Cache::remember('exchange_rate_eur', 60 * 30, function () {
+            try {
+                $response = Http::timeout(5)->get("https://open.er-api.com/v6/latest/USD");
 
-            curl_setopt_array($curl, [
-                CURLOPT_URL => "https://open.er-api.com/v6/latest/USD",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT => 5,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-            ]);
-
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-
-            curl_close($curl);
-
-            if (!$err) {
-                $data = json_decode($response, true);
-                if (isset($data['rates']['EUR'])) {
-                    return $data['rates']['EUR'];
+                if ($response->successful()) {
+                    $data = $response->json();
+                    return $data['rates']['EUR'] ?? env('EXCHANGE_RATE', 0.85);
                 }
+            } catch (\Exception $e) {
+                Log::error('Failed to fetch exchange rate: ' . $e->getMessage());
             }
-        } catch (\Exception $e) {
 
-        }
-
-        return env('EXCHANGE_RATE', 0.85);
+            return env('EXCHANGE_RATE', 0.85);
+        });
     }
 }

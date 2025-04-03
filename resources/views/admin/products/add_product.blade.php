@@ -1,53 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Product</title>
-    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-    <style>
-        .admin-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        textarea.form-control {
-            height: 150px;
-        }
-        .error-message {
-            color: red;
-            margin-top: 5px;
-            font-size: 0.9em;
-        }
-    </style>
-</head>
-<body>
+@extends('layouts.admin')
+
+@section('title', 'Add New Product')
+
+@push('styles')
+<style>
+    .admin-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    textarea.form-control {
+        height: 150px;
+    }
+    .error-message {
+        color: red;
+        margin-top: 5px;
+        font-size: 0.9em;
+    }
+</style>
+@endpush
+
+@section('content')
     <div class="admin-container">
         <h1>Add New Product</h1>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        @include('components.error-message') {{-- Include error message if any --}}
 
         <form action="{{ route('admin.add.product.submit') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -81,5 +72,10 @@
             </div>
         </form>
     </div>
-</body>
-</html>
+@endsection
+
+@push('scripts')
+<script>
+    console.log("Products page loaded");
+</script>
+@endpush
