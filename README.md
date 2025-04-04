@@ -31,6 +31,117 @@
 ### 10. **Reusable Code with Traits:**
    - Extracted reusable code (like image optimization) into a dedicated trait for better reusability and cleaner code.
 
+
+#### Automated Testing Setup
+
+### 1. **Testing Configuration**
+The tests are configured to use an **in-memory SQLite database** for faster and isolated testing. This ensures that each test starts with a fresh database without affecting your main development database.
+
+To enable this, the following environment variables are set:
+
+```xml
+<env name="DB_CONNECTION" value="sqlite"/>
+<env name="DB_DATABASE" value=":memory:"/>
+```
+
+This configuration ensures that the database is cleared and reset for each test run, without the need for additional configurations like `DatabaseTransactions`.
+
+### 2. **Testing Types**
+
+- **Unit Tests**: These tests focus on isolated components, ensuring that individual methods or functions work correctly. For example, we tested the image optimizer trait to verify if it optimizes images correctly.
+  
+- **Feature Tests**: These tests simulate real user interactions and ensure that multiple components work together. We have feature tests for product display, exchange rate fetching, and error logging.
+
+### 3. **Unit Testing Image Optimizer**
+
+The **`ImageOptimizer`** trait has been unit-tested to ensure it correctly optimizes images larger than 1MB and saves them to storage. We used the `Intervention\Image` package for image manipulation.
+
+#### Example Test Case for Image Optimization:
+
+```php
+#[Test]
+public function it_optimizes_image_when_over_1mb()
+{
+    // Arrange: Create a mock image file larger than 1MB
+    $file = $this->createMockUploadedFile();
+
+    // Act: Call the optimizeImage method
+    $path = (new ImageOptimizer)->optimizeImage($file, 'images');
+
+    // Assert: Verify that the file is stored and optimized
+    $this->assertFileExists($path);
+}
+```
+
+### 4. **Feature Testing Product Display**
+
+Feature tests were written to ensure that product data is displayed correctly on the frontend and that API calls for exchange rates are handled properly. 
+
+#### Example Test Case for Product Display:
+
+```php
+#[Test]
+public function it_displays_product_list()
+{
+    // Arrange: Create some products
+    Product::factory()->count(3)->create();
+
+    // Act: Visit the product list page
+    $response = $this->get(route('home'));
+
+    // Assert: Ensure the page loads and displays products
+    $response->assertStatus(200);
+    $response->assertViewHas('products');
+}
+```
+
+### 7. **Test Database Setup**
+
+We are using an **in-memory SQLite database** to run our tests. This setup provides a clean slate for every test and avoids polluting your real database with test data.
+
+```php
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class SomeFeatureTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_something()
+    {
+        // Your test logic...
+    }
+}
+```
+
+This makes the testing process faster and more reliable, especially when working with a clean database state for each test run.
+
+### 7. **Dependencies**
+
+- `phpunit`: Used for running the tests.
+- `Mockery`: Used for mocking classes like the `Log` facade.
+- `Intervention\Image`: Used for image manipulation in the `ImageOptimizer` trait.
+  
+### 8. **Running Tests**
+
+To run the tests, simply execute the following command:
+
+```bash
+php artisan test
+```
+
+This will run both the unit and feature tests for your application.
+
+### 9. **Disabling Database Transactions**
+
+Since we’re using the `:memory:` SQLite database for testing, there is no need to use `DatabaseTransactions` in the test classes. SQLite in-memory databases are automatically reset after each test, ensuring data isolation without the need for explicit transactions.
+
+---
+
+### Conclusion
+
+By leveraging automated tests, we ensure that the application functions correctly in various scenarios, including product display, image optimization, and error handling. The in-memory SQLite database provides a fast and isolated testing environment without affecting the main database.
+
+
 ---
 
 ## Suggestions for Improvement

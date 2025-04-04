@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
+    use HasFactory;
+    
     protected $guarded = ['id'];
 
     // format created at of product

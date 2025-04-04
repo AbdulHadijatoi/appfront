@@ -44,7 +44,10 @@
             <h1>Admin - Products</h1>
             <div>
                 <a href="{{ route('admin.add.product') }}" class="btn btn-primary">Add New Product</a>
-                <a href="{{ route('logout') }}" class="btn btn-secondary">Logout</a>
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary">Logout</button>
+                </form>
             </div>
         </div>
 

@@ -4,7 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
-Route::get('/', [ProductController::class, 'index']);
+Route::get('/', [ProductController::class, 'index'])->name('home');
 
 Route::prefix('products')->name('products.')->group(function () {
     Route::get('/{product}', [ProductController::class, 'show'])->name('show');
@@ -16,6 +16,7 @@ Route::middleware('guest')->group(function(){
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 });
 
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 
 require __DIR__.'/admin.php';

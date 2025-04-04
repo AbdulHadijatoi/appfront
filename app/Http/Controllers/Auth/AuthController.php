@@ -19,7 +19,7 @@ class AuthController extends Controller
             return redirect()->route('admin.products');
         }
 
-        return redirect()->back()->with('error', 'Invalid login credentials');
+        return redirect()->route('login')->with('error', 'Invalid login credentials');
     }
 
     public function logout()
