@@ -32,7 +32,7 @@
    - Extracted reusable code (like image optimization) into a dedicated trait for better reusability and cleaner code.
 
 
-#### Automated Testing Setup
+## Automated Testing Setup
 
 ### 1. **Testing Configuration**
 The tests are configured to use an **in-memory SQLite database** for faster and isolated testing. This ensures that each test starts with a fresh database without affecting your main development database.
