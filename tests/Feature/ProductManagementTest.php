@@ -17,7 +17,6 @@ class ProductManagementTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[Test]
     protected function authenticateUser()
     {
         $user = User::factory()->create();
