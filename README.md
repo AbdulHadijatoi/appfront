@@ -118,7 +118,6 @@ This makes the testing process faster and more reliable, especially when working
 ### 7. **Dependencies**
 
 - `phpunit`: Used for running the tests.
-- `Mockery`: Used for mocking classes like the `Log` facade.
 - `Intervention\Image`: Used for image manipulation in the `ImageOptimizer` trait.
   
 ### 8. **Running Tests**
